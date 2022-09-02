@@ -51,12 +51,5 @@ Development and entertainment plus:
 
 
 
-
-
-Usage:
-```C#
-[CallInEditor]
-void HelloGitFunction(){
-    ....
-```
-
+## To-Do:
+- Add a Debloater type script too to make it a one-stop solution. (Maybe fork the famous windows10debloater)
