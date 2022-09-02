@@ -309,7 +309,7 @@ Windows Registry Editor Version 5.00
 
 	if ($x -eq 'Chocolatey / Development Essentials') {
 		#install git
-		choco install git -y
+		#choco install git -y
 
 		#install vscode
 		choco install vscode -y
@@ -328,7 +328,7 @@ Windows Registry Editor Version 5.00
 
 	if ($x -eq 'Chocolatey / Satyam Essentials') {
 		#install git
-		choco install git -y
+		#choco install git -y
 
 		#install vscode
 		choco install vscode -y
