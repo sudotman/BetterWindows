@@ -18,7 +18,7 @@ Fetches FFMpeg's latest release from the release repo, extracts the binary, adds
 !["ffmpeg"](https://github.com/sudotman/sudotman/blob/main/demos/BetterWindows/ffmpeg.png)
 
 ## 2. Tools / Remove Bloat
-Removes all pre-installed bloatware including Microsoft OneDrive.
+Removes all pre-installed bloatware.
 
 ## 2. Tools / Youtube-Dl + Context
 Gets the latest Youtube-Dl release and adds it to PATH and adds a context menu entry to download a video anywhere in the directory.
