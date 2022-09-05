@@ -10,6 +10,15 @@ Windows is the most popular OS but setting up a fresh install takes a lot of man
 ## Installation
 You can download the latest ```.ps1``` through [Releases](https://github.com/sudotman/BetterWindows/releases/) and right-click and select *'Run with Powershell'*.
 
+or
+
+You can clone/download zip of the repository. 
+
+## Usage
+Most things are self-explanatory but just make sure to:
+- Install the Prereqs before using most of the things. 
+- Right-click and select *'Run with Powershell'*.
+
 # Contents
 
 ## 1. Tools / FFMpeg
