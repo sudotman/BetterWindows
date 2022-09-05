@@ -8,6 +8,274 @@ param
 	[Parameter()][String]$YoutubeDLPath = "C:\betterEnv\youtube-dl\"
 )
 
+Clear-Host
+function Request-AdminPrivilege() {
+	# Used from https://stackoverflow.com/a/31602095 because it preserves the working directory!
+	If (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) { Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs; exit }
+}
+
+function Set-ExtraStuff() {
+	[CmdletBinding()] param ()
+
+	cmd /c color B
+
+	$writeAscii = @"
+	
+	
+	__                        __  __    _             _           ____     __       __             
+	_________ _/ /___  ______ _____ ___  / /_/ /_  (_)___  ____ _(_)__  _____/ __/__  / /______/ /_  ___  _____
+   / ___/ __ `/ __/ / / / __ `/ __ `__ \/ __/ __ \/ / __ \/ __ `/ / _ \/ ___/ /_/ _ \/ __/ ___/ __ \/ _ \/ ___/
+  (__  ) /_/ / /_/ /_/ / /_/ / / / / / / /_/ / / / / / / / /_/ / /  __(__  ) __/  __/ /_/ /__/ / / /  __/ /    
+ /____/\__,_/\__/\__, /\__,_/_/ /_/ /_/\__/_/ /_/_/_/ /_/\__, /_/\___/____/_/  \___/\__/\___/_/ /_/\___/_/     
+				/____/                                  /____/                                              
+				
+"@
+
+	Write-Host $writeAscii
+}
+
+
+function Remove-Bloat() {
+	$Apps = @(
+		# bloat
+		"Microsoft.3DBuilder"                    # 3D Builder
+		"Microsoft.549981C3F5F10"                # Cortana
+		"Microsoft.Appconnector"
+		"Microsoft.BingFinance"                  # Finance
+		"Microsoft.BingFoodAndDrink"             # Food And Drink
+		"Microsoft.BingHealthAndFitness"         # Health And Fitness
+		"Microsoft.BingNews"                     # News
+		"Microsoft.BingSports"                   # Sports
+		"Microsoft.BingTranslator"               # Translator
+		"Microsoft.BingTravel"                   # Travel
+		"Microsoft.BingWeather"                  # Weather
+		"Microsoft.CommsPhone"
+		"Microsoft.ConnectivityStore"
+		"Microsoft.GetHelp"
+		"Microsoft.Getstarted"
+		"Microsoft.Messaging"
+		"Microsoft.Microsoft3DViewer"
+		"Microsoft.MicrosoftOfficeHub"
+		"Microsoft.MicrosoftPowerBIForWindows"
+		"Microsoft.MicrosoftSolitaireCollection" # MS Solitaire
+		"Microsoft.MixedReality.Portal"
+		"Microsoft.NetworkSpeedTest"
+		"Microsoft.Office.OneNote"               # MS Office One Note
+		"Microsoft.Office.Sway"
+		"Microsoft.OneConnect"
+		"Microsoft.People"                       # People
+		"Microsoft.MSPaint"                      # Paint 3D
+		"Microsoft.Print3D"                      # Print 3D
+		"Microsoft.SkypeApp"                     # Skype
+		"Microsoft.Todos"                        # Microsoft To Do
+		"Microsoft.Wallet"
+		"Microsoft.Whiteboard"                   # Microsoft Whiteboard
+		"Microsoft.WindowsAlarms"                # Alarms
+		"microsoft.windowscommunicationsapps"
+		"Microsoft.WindowsMaps"                  # Maps
+		"Microsoft.WindowsPhone"
+		"Microsoft.WindowsReadingList"
+		"Microsoft.WindowsSoundRecorder"         # Windows Sound Recorder
+		"Microsoft.XboxApp"                      # Xbox Console Companion (Replaced by new App)
+		"Microsoft.YourPhone"                    # Your Phone
+		"Microsoft.ZuneMusic"                    # Groove Music / (New) Windows Media Player
+		"Microsoft.ZuneVideo"                    # Movies & TV
+	
+		# Default Windows 11 apps
+		"MicrosoftWindows.Client.WebExperience"  # Taskbar Widgets
+		"MicrosoftTeams"                         # Microsoft Teams / Preview
+	
+		# 3rd party Apps
+		"*ACGMediaPlayer*"
+		"*ActiproSoftwareLLC*"
+		"*AdobePhotoshopExpress*"                # Adobe Photoshop Express
+		"*Amazon.com.Amazon*"                    # Amazon Shop
+		"*Asphalt8Airborne*"                     # Asphalt 8 Airbone
+		"*AutodeskSketchBook*"
+		"*BubbleWitch3Saga*"                     # Bubble Witch 3 Saga
+		"*CaesarsSlotsFreeCasino*"
+		"*CandyCrush*"                           # Candy Crush
+		"*COOKINGFEVER*"
+		"*CyberLinkMediaSuiteEssentials*"
+		"*DisneyMagicKingdoms*"
+		"*Dolby*"                                # Dolby Products (Like Atmos)
+		"*DrawboardPDF*"
+		"*Duolingo-LearnLanguagesforFree*"       # Duolingo
+		"*EclipseManager*"
+		"*Facebook*"                             # Facebook
+		"*FarmVille2CountryEscape*"
+		"*FitbitCoach*"
+		"*Flipboard*"                            # Flipboard
+		"*HiddenCity*"
+		"*Hulu*"
+		"*iHeartRadio*"
+		"*Keeper*"
+		"*LinkedInforWindows*"
+		"*MarchofEmpires*"
+		"*NYTCrossword*"
+		"*OneCalendar*"
+		"*PandoraMediaInc*"
+		"*PhototasticCollage*"
+		"*PicsArt-PhotoStudio*"
+		"*Plex*"                                 # Plex
+		"*PolarrPhotoEditorAcademicEdition*"
+		"*RoyalRevolt*"                          # Royal Revolt
+		"*Shazam*"
+		"*Sidia.LiveWallpaper*"                  # Live Wallpaper
+		"*SlingTV*"
+		"*Speed Test*"
+		"*Sway*"
+		"*TuneInRadio*"
+		"*Twitter*"                              # Twitter
+		"*Viber*"
+		"*WinZipUniversal*"
+		"*Wunderlist*"
+		"*XING*"
+	
+		# Apps which other apps depend on
+		"Microsoft.Advertising.Xaml"
+	
+		# SAMSUNG Bloat
+		#"SAMSUNGELECTRONICSCO.LTD.SamsungSettings1.2"          # Allow user to Tweak some hardware settings
+		"SAMSUNGELECTRONICSCO.LTD.1412377A9806A"
+		"SAMSUNGELECTRONICSCO.LTD.NewVoiceNote"
+		"SAMSUNGELECTRONICSCoLtd.SamsungNotes"
+		"SAMSUNGELECTRONICSCoLtd.SamsungFlux"
+		"SAMSUNGELECTRONICSCO.LTD.StudioPlus"
+		"SAMSUNGELECTRONICSCO.LTD.SamsungWelcome"
+		"SAMSUNGELECTRONICSCO.LTD.SamsungUpdate"
+		"SAMSUNGELECTRONICSCO.LTD.SamsungSecurity1.2"
+		"SAMSUNGELECTRONICSCO.LTD.SamsungScreenRecording"
+		#"SAMSUNGELECTRONICSCO.LTD.SamsungRecovery"             # Used to Factory Reset
+		"SAMSUNGELECTRONICSCO.LTD.SamsungQuickSearch"
+		"SAMSUNGELECTRONICSCO.LTD.SamsungPCCleaner"
+		"SAMSUNGELECTRONICSCO.LTD.SamsungCloudBluetoothSync"
+		"SAMSUNGELECTRONICSCO.LTD.PCGallery"
+		"SAMSUNGELECTRONICSCO.LTD.OnlineSupportSService"
+		"4AE8B7C2.BOOKING.COMPARTNERAPPSAMSUNGEDITION"
+	
+		# Remove the # to Uninstall
+	
+		#"Microsoft.FreshPaint"             # Paint
+		"Microsoft.MicrosoftEdge"          # Microsoft Edge
+		#"Microsoft.MicrosoftStickyNotes"   # Sticky Notes
+		#"Microsoft.WindowsCalculator"      # Calculator
+		#"Microsoft.WindowsCamera"          # Camera
+		#"Microsoft.ScreenSketch"           # Snip and Sketch (now called Snipping tool, replaces the Win32 version in clean installs)
+		"Microsoft.WindowsFeedbackHub"     # Feedback Hub
+		#"Microsoft.Windows.Photos"         # Photos
+	
+		"*Netflix*"                        # Netflix
+		#"*SpotifyMusic*"                   # Spotify
+	
+		#"Microsoft.WindowsStore"           # Windows Store
+	
+		# Apps which cannot be removed using Remove-AppxPackage
+		#"Microsoft.BioEnrollment"
+		#"Microsoft.WindowsFeedback"        # Feedback Module
+		#"Windows.ContactSupport"
+	)
+	
+	Write-Title -Text "Remove Bloatware Apps"
+	Write-Section -Text "Removing Windows unneeded Apps"
+	Remove-UWPAppx -AppxPackages $Apps
+}
+
+function Remove-OneDrive() {
+    # Description: This script will remove and disable OneDrive integration.
+    Write-Host "Kill OneDrive process..."
+    taskkill.exe /F /IM "OneDrive.exe"
+    taskkill.exe /F /IM "explorer.exe"
+
+    Write-Host "Remove OneDrive."
+    if (Test-Path "$env:systemroot\System32\OneDriveSetup.exe") {
+        & "$env:systemroot\System32\OneDriveSetup.exe" /uninstall
+    }
+    if (Test-Path "$env:systemroot\SysWOW64\OneDriveSetup.exe") {
+        & "$env:systemroot\SysWOW64\OneDriveSetup.exe" /uninstall
+    }
+
+    Write-Host "Removing OneDrive leftovers..."
+    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue "$env:localappdata\Microsoft\OneDrive"
+    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue "$env:programdata\Microsoft OneDrive"
+    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue "$env:systemdrive\OneDriveTemp"
+    # check if directory is empty before removing:
+    If ((Get-ChildItem "$env:userprofile\OneDrive" -Recurse | Measure-Object).Count -eq 0) {
+        Remove-Item -Recurse -Force -ErrorAction SilentlyContinue "$env:userprofile\OneDrive"
+    }
+
+    Write-Host "Disable OneDrive via Group Policies."
+    New-FolderForced -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\OneDrive"
+    Set-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\OneDrive" "DisableFileSyncNGSC" 1
+
+    Write-Host "Remove Onedrive from explorer sidebar."
+    New-PSDrive -PSProvider "Registry" -Root "HKEY_CLASSES_ROOT" -Name "HKCR"
+    mkdir -Force "HKCR:\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}"
+    Set-ItemProperty -Path "HKCR:\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}" "System.IsPinnedToNameSpaceTree" 0
+    mkdir -Force "HKCR:\Wow6432Node\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}"
+    Set-ItemProperty -Path "HKCR:\Wow6432Node\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}" "System.IsPinnedToNameSpaceTree" 0
+    Remove-PSDrive "HKCR"
+
+    # Thank you Matthew Israelsson
+    Write-Host "Removing run hook for new users..."
+    reg load "hku\Default" "C:\Users\Default\NTUSER.DAT"
+    reg delete "HKEY_USERS\Default\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v "OneDriveSetup" /f
+    reg unload "hku\Default"
+
+    Write-Host "Removing startmenu entry..."
+    Remove-Item -Force -ErrorAction SilentlyContinue "$env:userprofile\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk"
+
+    Write-Host "Removing scheduled task..."
+    Get-ScheduledTask -TaskPath '\' -TaskName 'OneDrive*' -ea SilentlyContinue | Unregister-ScheduledTask -Confirm:$false
+
+    Write-Host "Restarting explorer..."
+    Start-Process "explorer.exe"
+
+    Write-Host "Waiting for explorer to complete loading..."
+    Start-Sleep 5
+}
+
+function Set-Rebloat() {
+    # The following code is from Microsoft (Adapted): https://go.microsoft.com/fwlink/?LinkId=619547
+    # Get all the provisioned packages
+    $Packages = (Get-Item 'HKLM:\Software\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\Applications') | Get-ChildItem
+    # Filter the list if provided a filter
+    $PackageFilter = $args[0]
+
+    If ([string]::IsNullOrEmpty($PackageFilter)) {
+        Write-Warning "No filter specified, attempting to re-register all provisioned apps."
+    } Else {
+        $Packages = $Packages | Where-Object { $_.Name -like $PackageFilter }
+
+        If ($null -eq $Packages) {
+            Write-Warning "No provisioned apps match the specified filter."
+            exit
+        } Else {
+            Write-Host "Registering the provisioned apps that match $PackageFilter ..."
+        }
+    }
+
+    ForEach ($Package in $Packages) {
+        # Get package name & path
+        $PackageName = $Package | Get-ItemProperty | Select-Object -ExpandProperty PSChildName
+        $PackagePath = [System.Environment]::ExpandEnvironmentVariables(($Package | Get-ItemProperty | Select-Object -ExpandProperty Path))
+        # Register the package
+        Write-Host "Attempting to register package: $PackageName ..."
+        Add-AppxPackage -register $PackagePath -DisableDevelopmentMode
+    }
+}
+
+
+Request-AdminPrivilege # Check admin rights
+
+Set-ExtraStuff
+
+Get-ChildItem -Recurse $PSScriptRoot\*.ps*1 | Unblock-File
+
+# Makes the console look cooler
+Write-Host "Your Current Folder $pwd"
+Write-Host "Script Root Folder $PSScriptRoot"
+
 #General Declares in the Program
 $SaveFFMPEGTempLocation = $FFMPEGPath + "ffmpeg-release-essentials.zip"
 $ExtractFFMPEGTempLocation = $FFMPEGPath + "ffmpeg-release-essentials"
@@ -35,6 +303,8 @@ if ($Architecture -eq 'Detect') {
 
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
+
+[System.Windows.Forms.Application]::EnableVisualStyles() # Rounded Buttons :3
 
 # $sizeMultiplier = 2
 
@@ -72,7 +342,7 @@ $listBox.Height = 80
 
 
 [void] $listBox.Items.Add('Prereqs / Git+Chocolatey')
-
+[void] $listBox.Items.Add('Tools / Remove Bloat')
 
 [void] $listBox.Items.Add('Tools / FFMpeg')
 [void] $listBox.Items.Add('Tools / Youtube-DL')
@@ -84,6 +354,8 @@ $listBox.Height = 80
 [void] $listBox.Items.Add('Chocolatey / Gaming Essentials')
 
 [void] $listBox.Items.Add('Unity / Doctor Character')
+
+[void] $listBox.Items.Add('Why / Rebloat')
 
 
 
@@ -202,6 +474,11 @@ Windows Registry Editor Version 5.00
 
 		reg.exe IMPORT $YoutubeDLContextReg
 		# regedit.exe /s $YoutubeDLContextReg
+	}
+
+	if($x -eq 'Tools / Remove Bloat'){
+		Remove-Bloat
+		Remove-OneDrive
 	}
 
 
@@ -372,6 +649,10 @@ Windows Registry Editor Version 5.00
 
 		#install discord
 		choco install discord -y
+	}
+
+	if($x -eq 'Why / Rebloat'){
+		Set-Rebloat
 	}
 	
 	

@@ -17,6 +17,9 @@ Fetches FFMpeg's latest release from the release repo, extracts the binary, adds
 
 !["ffmpeg"](https://github.com/sudotman/sudotman/blob/main/demos/BetterWindows/ffmpeg.png)
 
+## 2. Tools / Remove Bloat
+Removes all pre-installed bloatware including Microsoft OneDrive.
+
 ## 2. Tools / Youtube-Dl + Context
 Gets the latest Youtube-Dl release and adds it to PATH and adds a context menu entry to download a video anywhere in the directory.
 
@@ -38,18 +41,23 @@ Fetches and installs:
 - Steam
 - Discord
 
-## 5. Chocolatey / Entertainment Essentials
+## 6. Chocolatey / Entertainment Essentials
 Fetches and installs:
 - VLC
 - Spotify
 
-## 6. Chocolatey / Satyam Essentials
+## 7 Chocolatey / Satyam Essentials
 Fetches and installs:
 Development and entertainment plus:
 - Android Debug Bridge
 
+## 8. Why / Rebloat
+If for some reason, you would want to rebloat your device in a proper way.
 
 
 
 ## To-Do:
-- Add a Debloater type script too to make it a one-stop solution. (Maybe fork the famous windows10debloater)
+- ~~Add a Debloater type script too to make it a one-stop solution. (Maybe fork the famous windows10debloater)~~
+- Reorganize the script a little bit (maybe a more procedural main-function based script)
+- Maybe rework the UI (not really needed as the basic selection menu gets the work done but would be more pleasing)
+- Remove redundant code, maybe have string selections/array selections to fetch chocolatey for example. And, also divide them into functions.
