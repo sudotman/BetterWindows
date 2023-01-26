@@ -363,7 +363,23 @@ $form.Controls.Add($listBox)
 
 $form.Topmost = $true
 
-$result = $form.ShowDialog()
+$continue = $true
+while ($continue) {
+    $result = $form.ShowDialog()
+
+    if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
+        $x = $listBox.SelectedItem
+        Write-Host "Fetching" $x
+        # run commands corresponding to selected item
+
+        # check if user wants to continue using the script
+        $continue = [System.Windows.Forms.MessageBox]::Show("Do you want to continue using the script?", "", [System.Windows.Forms.MessageBoxButtons]::YesNo) -eq [System.Windows.Forms.DialogResult]::Yes
+    } else {
+        # exit loop if user pressed cancel button
+        $continue = $false
+    }
+}
+
 
 if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
 	$x = $listBox.SelectedItem
