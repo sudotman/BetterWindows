@@ -277,8 +277,8 @@ Write-Host "Your Current Folder $pwd"
 Write-Host "Script Root Folder $PSScriptRoot"
 
 #General Declares in the Program
-$SaveFFMPEGTempLocation = $FFMPEGPath + "ffmpeg-release-essentials.zip"
-$ExtractFFMPEGTempLocation = $FFMPEGPath + "ffmpeg-release-essentials"
+$SaveFFMPEGTempLocation = $FFMPEGPath + "ffmpeg-build.zip"
+$ExtractFFMPEGTempLocation = $FFMPEGPath + "ffmpeg-build"
 
 #General Declares in the Program
 $SaveYoutubeDLTempLocation = $YoutubeDLPath + "yt-dlp.exe"
@@ -546,10 +546,13 @@ Windows Registry Editor Version 5.00
 	if ($x -eq 'Tools / FFMpeg') {
 		
 
-		#Request the static files available for download based on Architecture and Channel
-		#$Request = Invoke-WebRequest -Uri ("https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip")	
+		#Request the static files available for download based on Architecture and Channel	
 	
-		$DownloadFFMPEGStatic = ("https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip")
+		$DownloadFFMPEGStatic = if ($Architecture -eq '64') {
+			"https://github.com/BtbN/FFmpeg-Builds/releases/latest/download/ffmpeg-master-latest-win64-gpl.zip"
+		} else {
+			"https://github.com/BtbN/FFmpeg-Builds/releases/latest/download/ffmpeg-master-latest-win32-gpl.zip"
+		}
 		
 		# $ExtractedFFMPEGTempLocation = $FFMPEGPath + "ffmpeg-release-essentials\" + ($DownloadFFMPEGStatic.Split('/')[-1].Replace('.zip', '')) + "\"
 
@@ -580,9 +583,11 @@ Windows Registry Editor Version 5.00
 
 		#Copy from temp location to $FFMPEGPath
 		Write-Host "Retrieving and installing new FFMPEG files"
-		# Get-ChildItem -Path $ExtractFFMPEGTempLocation -Recurse | Where-Object {$_.Name -match 'ffmpeg.exe'} | Select-Object Fullname | Copy-Item -Destination $FFMPEGPath -Recurse -Force
-		Get-ChildItem -Path $ExtractFFMPEGTempLocation -Recurse -Filter *ffmpeg*.exe | Copy-Item -Destination $FFMPEGPath -Recurse -Force
-		# Get-ChildItem $ExtractedFFMPEGTempLocation | Copy-Item -Destination $FFMPEGPath -Recurse -Force
+		# The new builds have ffmpeg.exe in a bin subdirectory
+		Get-ChildItem -Path $ExtractFFMPEGTempLocation -Recurse -Name "ffmpeg.exe" | ForEach-Object {
+			$ffmpegPath = Join-Path $ExtractFFMPEGTempLocation $_
+			Copy-Item -Path $ffmpegPath -Destination $FFMPEGPath -Force
+		}
 
 		#Add to the PATH Environment Variables
 	
