@@ -281,7 +281,7 @@ $SaveFFMPEGTempLocation = $FFMPEGPath + "ffmpeg-release-essentials.zip"
 $ExtractFFMPEGTempLocation = $FFMPEGPath + "ffmpeg-release-essentials"
 
 #General Declares in the Program
-$SaveYoutubeDLTempLocation = $YoutubeDLPath + "youtube-dl.exe"
+$SaveYoutubeDLTempLocation = $YoutubeDLPath + "yt-dlp.exe"
 
 #Context declares
 $YoutubeDLContext = $YoutubeDLPath + "YoutubeDLPrompt.bat"
@@ -309,52 +309,81 @@ Add-Type -AssemblyName System.Drawing
 # $sizeMultiplier = 2
 
 $form = New-Object System.Windows.Forms.Form
-$form.Text = 'satyam thingies fetcher'
-$form.Size = New-Object System.Drawing.Size(300, 200)
+$form.Text = 'BetterWindows Setup Tool'
+$form.Size = New-Object System.Drawing.Size(400, 350)
 $form.StartPosition = 'CenterScreen'
+$form.FormBorderStyle = 'FixedDialog'
+$form.MaximizeBox = $false
+$form.BackColor = [System.Drawing.Color]::FromArgb(240, 240, 240)
 
 $okButton = New-Object System.Windows.Forms.Button
-$okButton.Location = New-Object System.Drawing.Point(75, 120)
-$okButton.Size = New-Object System.Drawing.Size(75, 23)
-$okButton.Text = 'OK'
+$okButton.Location = New-Object System.Drawing.Point(120, 280)
+$okButton.Size = New-Object System.Drawing.Size(80, 30)
+$okButton.Text = 'Install'
+$okButton.BackColor = [System.Drawing.Color]::FromArgb(0, 120, 215)
+$okButton.ForeColor = [System.Drawing.Color]::White
+$okButton.FlatStyle = 'Flat'
+$okButton.FlatAppearance.BorderSize = 0
 $okButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
 $form.AcceptButton = $okButton
 $form.Controls.Add($okButton)
 
 $cancelButton = New-Object System.Windows.Forms.Button
-$cancelButton.Location = New-Object System.Drawing.Point(150, 120)
-$cancelButton.Size = New-Object System.Drawing.Size(75, 23)
+$cancelButton.Location = New-Object System.Drawing.Point(210, 280)
+$cancelButton.Size = New-Object System.Drawing.Size(80, 30)
 $cancelButton.Text = 'Cancel'
+$cancelButton.BackColor = [System.Drawing.Color]::FromArgb(100, 100, 100)
+$cancelButton.ForeColor = [System.Drawing.Color]::White
+$cancelButton.FlatStyle = 'Flat'
+$cancelButton.FlatAppearance.BorderSize = 0
 $cancelButton.DialogResult = [System.Windows.Forms.DialogResult]::Cancel
 $form.CancelButton = $cancelButton
 $form.Controls.Add($cancelButton)
 
 $label = New-Object System.Windows.Forms.Label
-$label.Location = New-Object System.Drawing.Point(10, 20)
-$label.Size = New-Object System.Drawing.Size(280, 20)
-$label.Text = 'Select resource to fetch:'
+$label.Location = New-Object System.Drawing.Point(20, 20)
+$label.Size = New-Object System.Drawing.Size(360, 25)
+$label.Text = 'Select components to install:'
+$label.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Bold)
+$label.ForeColor = [System.Drawing.Color]::FromArgb(60, 60, 60)
 $form.Controls.Add($label)
 
+$descLabel = New-Object System.Windows.Forms.Label
+$descLabel.Location = New-Object System.Drawing.Point(20, 45)
+$descLabel.Size = New-Object System.Drawing.Size(360, 20)
+$descLabel.Text = 'Choose from development tools, entertainment apps, and system utilities'
+$descLabel.Font = New-Object System.Drawing.Font("Segoe UI", 8)
+$descLabel.ForeColor = [System.Drawing.Color]::FromArgb(100, 100, 100)
+$form.Controls.Add($descLabel)
+
 $listBox = New-Object System.Windows.Forms.ListBox
-$listBox.Location = New-Object System.Drawing.Point(10, 40)
-$listBox.Size = New-Object System.Drawing.Size(260, 20)
-$listBox.Height = 80
+$listBox.Location = New-Object System.Drawing.Point(20, 75)
+$listBox.Size = New-Object System.Drawing.Size(350, 190)
+$listBox.Font = New-Object System.Drawing.Font("Segoe UI", 9)
+$listBox.BackColor = [System.Drawing.Color]::White
+$listBox.SelectionMode = 'One'
 
 
+[void] $listBox.Items.Add('═══ PREREQUISITES ═══')
 [void] $listBox.Items.Add('Prereqs / Git+Chocolatey')
+
+[void] $listBox.Items.Add('')
+[void] $listBox.Items.Add('═══ SYSTEM TOOLS ═══')
 [void] $listBox.Items.Add('Tools / Remove Bloat')
-
 [void] $listBox.Items.Add('Tools / FFMpeg')
-[void] $listBox.Items.Add('Tools / Youtube-DL')
-[void] $listBox.Items.Add('Tools / Youtube-DL / Context')
+[void] $listBox.Items.Add('Tools / yt-dlp')
+[void] $listBox.Items.Add('Tools / yt-dlp / Context')
 
+[void] $listBox.Items.Add('')
+[void] $listBox.Items.Add('═══ SOFTWARE PACKAGES ═══')
 [void] $listBox.Items.Add('Chocolatey / Development Essentials')
 [void] $listBox.Items.Add('Chocolatey / Satyam Essentials')
 [void] $listBox.Items.Add('Chocolatey / Entertainment Essentials')
 [void] $listBox.Items.Add('Chocolatey / Gaming Essentials')
 
+[void] $listBox.Items.Add('')
+[void] $listBox.Items.Add('═══ SPECIAL ACTIONS ═══')
 [void] $listBox.Items.Add('Unity / Doctor Character')
-
 [void] $listBox.Items.Add('Why / Rebloat')
 
 
@@ -369,11 +398,17 @@ while ($continue) {
 
     if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
         $x = $listBox.SelectedItem
-        Write-Host "Fetching" $x
+        
+        # Skip section headers and empty lines
+        if ($x -like "═══*═══" -or [string]::IsNullOrWhiteSpace($x)) {
+            continue
+        }
+        
+        Write-Host "Installing" $x
         # run commands corresponding to selected item
 
         # check if user wants to continue using the script
-        $continue = [System.Windows.Forms.MessageBox]::Show("Do you want to continue using the script?", "", [System.Windows.Forms.MessageBoxButtons]::YesNo) -eq [System.Windows.Forms.DialogResult]::Yes
+        $continue = [System.Windows.Forms.MessageBox]::Show("Installation completed! Do you want to install more components?", "BetterWindows", [System.Windows.Forms.MessageBoxButtons]::YesNo, [System.Windows.Forms.MessageBoxIcon]::Question) -eq [System.Windows.Forms.DialogResult]::Yes
     } else {
         # exit loop if user pressed cancel button
         $continue = $false
@@ -384,7 +419,13 @@ while ($continue) {
 if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
 	$x = $listBox.SelectedItem
 	
-	Write-Host "Fetching" $x
+	# Skip section headers and empty lines
+	if ($x -like "═══*═══" -or [string]::IsNullOrWhiteSpace($x)) {
+		Write-Host "Please select a valid option, not a section header."
+		exit
+	}
+	
+	Write-Host "Installing" $x
 	
 	if ($x -eq 'Prereqs / Git+Chocolatey') {
 		# install chocolatey
@@ -411,13 +452,13 @@ if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
 		Write-Host "Done running!"
 	}
 	
-	if ($x -eq 'Tools / Youtube-DL / Context') {
-		# youtube-dl -f "137+140/bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo[ext=mp4]+bestaudio/best" --merge-output-format mp4 %link%
+	if ($x -eq 'Tools / yt-dlp / Context') {
+		# yt-dlp -f "bv*[ext=mp4]+ba[ext=m4a]/b[ext=mp4] / bv*+ba/b" --merge-output-format mp4 %link%
 
 
 		# ffmpeg direct convert to mp4
 
-		# Youtube-DL Context menu
+		# yt-dlp Context menu
 
 		#Check if the ydl Path in C:\ exists if not create it
 		Write-Host "Detecting if ydl context file already exists"
@@ -434,7 +475,7 @@ if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
 :copy paste the path into the command prompt and transfer data to a location that you can edit.
 
 @ECHO OFF
-SET PATH=%PATH%;c:\youtube-dl-contextmenu-main\Stuff
+SET PATH=%PATH%;c:\betterEnv\youtube-dl\
 SET /P link=Enter YouTube link: 
 set link=%link:"=%
 :: %command: =_% example to replace all spaces in command with underscores
@@ -442,7 +483,7 @@ set link=%link:"=%
 IF "%link%"=="" GOTO Error
 
 ECHO "%link%". Downloading now
-youtube-dl -f "137+140/bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo[ext=mp4]+bestaudio/best" --merge-output-format mp4 %link%
+yt-dlp -f "bv*[ext=mp4]+ba[ext=m4a]/b[ext=mp4] / bv*+ba/b" --merge-output-format mp4 %link%
 GOTO End
 
 :Error
@@ -456,21 +497,21 @@ PAUSE
 EXIT /B
 "@
 
-		$youtubeDLBat | Out-File -FilePath $YoutubeDLContextReg
+		$youtubeDLBat | Out-File -FilePath $YoutubeDLContext
 
 
 		$youtubeDLReg = @"
 Windows Registry Editor Version 5.00
 
 [HKEY_CURRENT_USER\Software\Classes\directory\Background\shell\BetterWindows]
-@="&Download via YoutubeDL"
+@="&Download via yt-dlp"
 "Icon"="%SystemRoot%\\System32\\shell32.dll,71"
 	
 [HKEY_CURRENT_USER\Software\Classes\directory\Background\shell\BetterWindows\command]
 @="C:\\betterEnv\\youtube-dl\\YoutubeDLPrompt.bat \"%V\""
 	
 [HKEY_CURRENT_USER\Software\Classes\directory\shell\BetterWindows]
-@="&Download via YoutubeDL"
+@="&Download via yt-dlp"
 "Icon"="%SystemRoot%\\System32\\shell32.dll,71"
 	
 [HKEY_CURRENT_USER\Software\Classes\directory\shell\BetterWindows\command]
@@ -546,7 +587,11 @@ Windows Registry Editor Version 5.00
 		#Add to the PATH Environment Variables
 	
 		Write-Host "Adding the FFMPEG bin folder to the User Environment Variables"
-		[Environment]::SetEnvironmentVariable("PATH", ($FFMPEGPath), "User")
+		$currentPath = [Environment]::GetEnvironmentVariable("PATH", "User")
+		if ($currentPath -notlike "*$FFMPEGPath*") {
+			$newPath = if ($currentPath) { "$currentPath;$FFMPEGPath" } else { $FFMPEGPath }
+			[Environment]::SetEnvironmentVariable("PATH", $newPath, "User")
+		}
 		
 
 		#Clean up of files that were used
@@ -562,13 +607,13 @@ Windows Registry Editor Version 5.00
 		}		
 	}
 
-	if ($x -eq 'Tools / Youtube-DL') {
+	if ($x -eq 'Tools / yt-dlp') {
 		
 
 		#Request the static files available for download based on Architecture and Channel
 		#$Request = Invoke-WebRequest -Uri ("https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip")	
 	
-		$DownloadYoutubeDLStatic = ("https://youtube-dl.org/downloads/latest/youtube-dl.exe")
+		$DownloadYoutubeDLStatic = ("https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe")
 		
 		# $ExtractedFFMPEGTempLocation = $FFMPEGPath + "ffmpeg-release-essentials\" + ($DownloadFFMPEGStatic.Split('/')[-1].Replace('.zip', '')) + "\"
 
@@ -590,13 +635,17 @@ Windows Registry Editor Version 5.00
 		#Copy from temp location to $FFMPEGPath
 		Write-Host "Retrieving and installing new ydl files"
 		# Get-ChildItem -Path $ExtractFFMPEGTempLocation -Recurse | Where-Object {$_.Name -match 'ffmpeg.exe'} | Select-Object Fullname | Copy-Item -Destination $FFMPEGPath -Recurse -Force
-		Get-ChildItem -Path $SaveYoutubeDLTempLocation -Recurse -Filter *youtube-dl*.exe | Copy-Item -Destination $YoutubeDLPath -Recurse -Force
+		Get-ChildItem -Path $SaveYoutubeDLTempLocation -Recurse -Filter *yt-dlp*.exe | Copy-Item -Destination $YoutubeDLPath -Recurse -Force
 		# Get-ChildItem $ExtractedFFMPEGTempLocation | Copy-Item -Destination $FFMPEGPath -Recurse -Force
 
 		#Add to the PATH Environment Variables
 	
 		Write-Host "Adding the ydl bin folder to the User Environment Variables"
-		[Environment]::SetEnvironmentVariable("PATH", ($YoutubeDLPath), "User")
+		$currentPath = [Environment]::GetEnvironmentVariable("PATH", "User")
+		if ($currentPath -notlike "*$YoutubeDLPath*") {
+			$newPath = if ($currentPath) { "$currentPath;$YoutubeDLPath" } else { $YoutubeDLPath }
+			[Environment]::SetEnvironmentVariable("PATH", $newPath, "User")
+		}
 		
 	}
 
