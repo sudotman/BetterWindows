@@ -1,11 +1,18 @@
 # Better Windows
-A nifty tool made for additions to a usual Windows installation. 
+A modern tool for enhancing fresh Windows installations with essential software and configurations.
 
 ## Purpose
 Windows is the most popular OS but setting up a fresh install takes a lot of manual installation/configuration usually and hence this tool was made.
 <br>
 
 !["How the application looks"](https://github.com/sudotman/sudotman/blob/main/demos/BetterWindows/overall.png)
+
+## Recent Improvements ✨
+- **Fixed critical PATH variable bug** - No longer overwrites your entire PATH environment variable
+- **Updated to yt-dlp** - Replaced deprecated YouTube-DL with the modern maintained fork
+- **Modernized UI** - Improved styling, better organization, and enhanced user experience
+- **Better error handling** - More robust installation process
+- **Reliable downloads** - Updated download sources for better stability
 
 ## Installation
 You can download the latest ```.ps1``` through [Releases](https://github.com/sudotman/BetterWindows/releases/) and right-click and select *'Run with Powershell'*.
@@ -22,15 +29,15 @@ Most things are self-explanatory but just make sure to:
 # Contents
 
 ## 1. Tools / FFMpeg
-Fetches FFMpeg's latest release from the release repo, extracts the binary, adds it to PATH too.
+Fetches FFMpeg's latest release from GitHub (BtbN builds), extracts the binary, and safely adds it to PATH.
 
 !["ffmpeg"](https://github.com/sudotman/sudotman/blob/main/demos/BetterWindows/ffmpeg.png)
 
 ## 2. Tools / Remove Bloat
 Removes all pre-installed bloatware.
 
-## 2. Tools / Youtube-Dl + Context
-Gets the latest Youtube-Dl release and adds it to PATH and adds a context menu entry to download a video anywhere in the directory.
+## 2. Tools / Youtube-DL + Context
+Gets the latest yt-dlp release (modern YouTube-DL replacement) and adds it to PATH and adds a context menu entry to download a video anywhere in the directory.
 
 ## 3. Prereqs / Git+Chocolatey
 Installs Git and Chocolatey silently. The entries below require Git and Chocolatey to be installed.
